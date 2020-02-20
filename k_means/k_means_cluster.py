@@ -48,8 +48,10 @@ data_dict.pop("TOTAL", 0)
 ### can be any key in the person-level dictionary (salary, director_fees, etc.) 
 feature_1 = "salary"
 feature_2 = "exercised_stock_options"
+#feature_3 = "total_payments"
 poi  = "poi"
 features_list = [poi, feature_1, feature_2]
+#features_list = [poi, feature_1, feature_2, feature_3]
 data = featureFormat(data_dict, features_list )
 poi, finance_features = targetFeatureSplit( data )
 
@@ -59,13 +61,27 @@ poi, finance_features = targetFeatureSplit( data )
 ### for f1, f2, _ in finance_features:
 ### (as it's currently written, the line below assumes 2 features)
 for f1, f2 in finance_features:
+#for f1, f2, _ in finance_features:
     plt.scatter( f1, f2 )
 plt.show()
+
+### feature scaling
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+#rescaled_finance_features = scaler.fit_transform(finance_features)
+scaler.fit(finance_features)
+rescaled_finance_features = scaler.transform(finance_features)
+print "salary 200k scaled to: ", scaler.transform([[200000., 0.]])
+print "exercised_stock_options 1M scaled to: ", scaler.transform([[0., 1000000.]])
 
 ### cluster here; create predictions of the cluster labels
 ### for the data and store them to a list called pred
 
 
+from sklearn.cluster import KMeans
+#kmeans = KMeans(n_clusters=2, random_state=0).fit(finance_features)
+kmeans = KMeans(n_clusters=2, random_state=0).fit(rescaled_finance_features)
+pred = kmeans.labels_
 
 
 ### rename the "name" parameter when you change the number of features
