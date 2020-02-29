@@ -57,6 +57,8 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
             str = str.replace('shackleton', '')
             str = str.replace('chris', '')
             str = str.replace('germani', '')
+            str = str.replace('sshacklensf', '')
+            str = str.replace('cgermannsf', '')
             #print(str)
 
             ### append the text to word_data
