@@ -77,12 +77,15 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random
 ###############################################################################
 # Compute a PCA (eigenfaces) on the face dataset (treated as unlabeled
 # dataset): unsupervised feature extraction / dimensionality reduction
-n_components = 150
+n_components = 150  # tried with the 10, 15, 25, 50, 100, 250
 
 print "Extracting the top %d eigenfaces from %d faces" % (n_components, X_train.shape[0])
 t0 = time()
 pca = PCA(n_components=n_components, svd_solver='randomized', whiten=True).fit(X_train)
 print "done in %0.3fs" % (time() - t0)
+
+print "Giving the amount of variance explained by each of the selected components"
+print pca.explained_variance_ratio_
 
 eigenfaces = pca.components_.reshape((n_components, h, w))
 
@@ -103,7 +106,7 @@ param_grid = {
           'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1],
           }
 # for sklearn version 0.16 or prior, the class_weight parameter value is 'auto'
-## The GridSearchCV implements the usual estimator API: when “fitting” it on a dataset 
+## The GridSearchCV implements the usual estimator API: when fitting it on a dataset 
 ##    all the possible combinations of parameter values are evaluated and the best combination is retained.
 clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
 clf = clf.fit(X_train_pca, y_train)
@@ -128,7 +131,7 @@ print "done in %0.3fs" % (time() - t0)
 ##    sample average (only for multilabel classification). 
 ##    Micro average (averaging the total true positives, false negatives and false positives) 
 ##      is only shown for multi-label or multi-class with a subset of classes, because it corresponds to accuracy otherwise.
-## Note that in binary classification, recall of the positive class is also known as “sensitivity”; recall of the negative class is “specificity”.
+## Note that in binary classification, recall of the positive class is also known as 'sensitivity'; recall of the negative class is 'specificity'.
 print classification_report(y_test, y_pred, target_names=target_names)
 ## labels: list of labels to index the matrix. 
 ##    This may be used to reorder or select a subset of labels. 
